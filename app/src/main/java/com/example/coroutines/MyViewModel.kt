@@ -35,9 +35,7 @@ class MyViewModel : ViewModel() {
             if (binance?.data != null) {
                 result += "${binance.data.id} ${binance.data.rateUsd}"
             }
-            withContext(Dispatchers.Main) {
-                _uiState.postValue(UIState.Result(result))
-            }
+            _uiState.postValue(UIState.Result(result))
         }
     }
 
