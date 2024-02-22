@@ -7,7 +7,6 @@ import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 
 class MyViewModel : ViewModel() {
     private val _uiState = MutableLiveData<UIState>(UIState.Empty)
@@ -23,21 +22,22 @@ class MyViewModel : ViewModel() {
             val dash = async { repo.getCurrencyByName("dash") }.await()
             val binance = async { repo.getCurrencyByName("binance-coin") }.await()
 
-            if (bitcoin?.data != null) {
-                result += "${bitcoin.data.id} ${bitcoin.data.rateUsd}\n"
+            if (bitcoin.isSuccessful && bitcoin.body() != null) {
+                result += "${bitcoin.body()?.data?.id} ${bitcoin.body()?.data?.rateUsd}\n"
             }
-            if (ounce?.data != null) {
-                result += "${ounce.data.id} ${ounce.data.rateUsd}\n"
+            if (ounce.isSuccessful && ounce.body() != null) {
+                result += "${ounce.body()?.data?.id} ${ounce.body()?.data?.rateUsd}\n"
             }
-            if (dash?.data != null) {
-                result += "${dash.data.id} ${dash.data.rateUsd}\n"
+            if (dash.isSuccessful && dash.body() != null) {
+                result += "${dash.body()?.data?.id} ${dash.body()?.data?.rateUsd}\n"
             }
-            if (binance?.data != null) {
-                result += "${binance.data.id} ${binance.data.rateUsd}"
+            if (binance.isSuccessful && binance.body() != null) {
+                result += "${binance.body()?.data?.id} ${binance.body()?.data?.rateUsd}\n"
             }
             _uiState.postValue(UIState.Result(result))
         }
     }
+
 
     sealed class UIState {
         object Empty : UIState()
